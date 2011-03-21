@@ -8,7 +8,6 @@ A lib to identify and replace functions inside SQL statements.
                     ||        |
                 [Function] ----
 
-A Function contains N Parameters.
-A Parameter can another Function.
+A Function contains N Parameters. A Parameter can be another Function.
 
 = Work in progress = 
