@@ -1,4 +1,4 @@
-package fuser;
+package fuser.tokenizer;
 
 // IMMUTABLE
 public class Token {

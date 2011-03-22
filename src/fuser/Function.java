@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import fuser.tokenizer.TokenList;
+
 public class Function extends Parameter {
 
 	private static List<String> notAFunction = Arrays.asList("AND", "OR", "FROM", "JOIN", "ON");

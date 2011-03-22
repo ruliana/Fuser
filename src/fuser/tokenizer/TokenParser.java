@@ -1,4 +1,4 @@
-package fuser;
+package fuser.tokenizer;
 
 import static ginger.Seq.s;
 

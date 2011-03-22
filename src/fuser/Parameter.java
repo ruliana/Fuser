@@ -1,5 +1,7 @@
 package fuser;
 
+import fuser.tokenizer.TokenList;
+
 public class Parameter {
 
 	protected String name;

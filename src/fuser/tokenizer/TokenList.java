@@ -1,4 +1,4 @@
-package fuser;
+package fuser.tokenizer;
 
 import java.util.List;
 

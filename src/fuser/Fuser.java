@@ -4,6 +4,8 @@ import static ginger.Regex.r;
 
 import java.util.LinkedList;
 
+import fuser.tokenizer.TokenList;
+
 public class Fuser {
 
 	private final String sqlString;

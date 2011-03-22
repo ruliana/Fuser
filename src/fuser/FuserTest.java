@@ -6,6 +6,8 @@ import static junit.framework.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import fuser.tokenizer.TokenList;
+
 public class FuserTest {
 
 	private Fuser fuser;
