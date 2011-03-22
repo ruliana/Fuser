@@ -5,11 +5,11 @@ import java.util.List;
 import org.junit.Test;
 import static junit.framework.Assert.*;
 
-public class TokenParserTest {
+public class TokenizerTest {
 
 	@Test
 	public void basicTokenization() throws Exception {
-		TokenParser parser = new TokenParser();
+		Tokenizer parser = new Tokenizer();
 		parser.define("\\[\\w+\\]", "FIELD");
 		parser.define("'\\w+'", "STRING");
 		parser.define("\\w+", "IDENTIFIER");
@@ -20,7 +20,7 @@ public class TokenParserTest {
 	
 	@Test
 	public void preservingSpacing() {
-		TokenParser parser = new TokenParser();
+		Tokenizer parser = new Tokenizer();
 		parser.define("\\w+", "SOMETHING");
 		parser.define("\\S+", "SYMBOL");
 		parser.define("\\s+", "SPACING");

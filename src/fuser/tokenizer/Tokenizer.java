@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TokenParser {
+public class Tokenizer {
 
 	private LinkedHashMap<String, String> definitions = new LinkedHashMap<String, String>();
 	
