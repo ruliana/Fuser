@@ -31,7 +31,7 @@ public class Tokenizer {
 			for (Entry<String, String> entry : definitions.entrySet()) {
 				if (tokenCandidate.matches(entry.getKey())) {
 					result.add(new Token(tokenCandidate, entry.getValue()));
-					break; // If find something, stop trying to classify it
+					break; // If find something, stop trying to label it
 				}
 			}
 		}
