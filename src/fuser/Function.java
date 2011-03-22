@@ -23,6 +23,7 @@ public class Function extends Parameter {
 		return name + "(" + s(parameters).join(", ") + ")";
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -38,7 +39,7 @@ public class Function extends Parameter {
 
 	public static Function getFunction(TokenList tokens) {
 		if (!looksLikeAFunction(tokens)) return null;
-		
+
 		Function function = new Function(tokens.currentToken());
 		tokens.consume(2);
 		function.getParameters(tokens);
@@ -55,20 +56,20 @@ public class Function extends Parameter {
 		while (tokens.hasNextToken()) {
 			Function function = Function.getFunction(tokens);
 			if (function != null) parameters.add(function);
-			
+
 			Parameter parameter = Parameter.getParameter(tokens);
 			if (parameter != null) parameters.add(parameter);
-			
+
 			if (tokens.currentTokenIs(",")) {
 				tokens.consume();
 				continue;
 			}
-			
+
 			if (tokens.currentTokenIs(")")) {
 				tokens.consume();
 				return;
 			}
-			
+
 			tokens.consume();
 		}
 	}

@@ -10,7 +10,7 @@ public class Token {
 		this.value = value;
 		this.label = label;
 	}
-	
+
 	public String getValue() {
 		return value;
 	}
@@ -18,7 +18,7 @@ public class Token {
 	public String getLabel() {
 		return label;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "(" + getValue() + " :" + getLabel() + ")";

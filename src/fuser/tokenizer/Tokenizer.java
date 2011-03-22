@@ -12,16 +12,20 @@ import java.util.regex.Pattern;
 public class Tokenizer {
 
 	private LinkedHashMap<String, String> definitions = new LinkedHashMap<String, String>();
-	
+
 	public void define(String regex, String label) {
 		definitions.put(regex, label);
 	}
 
-	public List<Token> tokenize(String string) {
+	public TokenList tokenize(String string) {
+		return new TokenList(parse(string));
+	}
+
+	protected List<Token> parse(String string) {
 		List<Token> result = new LinkedList<Token>();
 		Pattern pattern = Pattern.compile(allDefinitionsTogether());
 		Matcher matcher = pattern.matcher(string);
-		
+
 		while (matcher.find()) {
 			String tokenCandidate = matcher.group();
 			for (Entry<String, String> entry : definitions.entrySet()) {
