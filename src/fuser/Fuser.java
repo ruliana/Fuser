@@ -1,43 +1,59 @@
 package fuser;
 
+import fuser.config.ParserConfig;
+import fuser.config.TransformationConfig;
 import java.util.LinkedList;
 
-import fuser.tokenizer.TokenList;
-import fuser.tokenizer.Tokenizer;
+import java.util.List;
+import tekai.Expression;
+import tekai.Parser;
+import tekai.Printer;
+import tekai.Transformation;
 
 public class Fuser {
 
-	private final String sqlString;
-	private Tokenizer tokenizer;
+	private Parser parser;
+        private Transformation transformation;
+        private static Printer printer;
 
 	public Fuser(String sqlString) {
-		this.sqlString = sqlString;
+		this.parser = new Parser(sqlString);
+                ParserConfig.configureParser(parser);
 
-		initializeTokenizer();
+                //Config Transformation
 	}
 
-	private void initializeTokenizer() {
-		tokenizer = new Tokenizer();
-		tokenizer.define("\\[\\w+\\]", "FIELD");
-		tokenizer.define("\"\\w+\"", "FIELD");
-		tokenizer.define("'\\w+'", "STRING");
-		tokenizer.define("\\w+", "SYMBOL");
-		tokenizer.define("\\S", "PUNCTUATION");
-	}
+        /**
+         * Translate a SQL String to some Databases
+         * @return List(SQL Postgres,
+         *              SQL SQL Server,
+         *              SQL Oracle,
+         *              SQL MySQL,
+         *              SQL Firebird)
+         */
+        public List<String> fusion(){
 
-	public LinkedList<Function> functionList() {
-		LinkedList<Function> result = new LinkedList<Function>();
+            List<String> result = new LinkedList<String>();
+            result.add(transformTo(TransformationConfig.tPOSTGRES));
+            result.add(transformTo(TransformationConfig.tMSSQL));
+            result.add(transformTo(TransformationConfig.tORACLE));
+            result.add(transformTo(TransformationConfig.tMYSQL));
+            result.add(transformTo(TransformationConfig.tFIREBIRD));
 
-		TokenList tokens = tokenizedSqlString();
-		while (tokens.hasNextToken()) {
-			Function function = Function.getFunction(tokens);
-			if (function != null) result.add(function);
-			tokens.consume();
-		}
-		return result;
-	}
+            return result;
 
-	protected TokenList tokenizedSqlString() {
-		return tokenizer.tokenize(sqlString);
-	}
+        }
+
+        private String transformTo(Transformation t){
+            transformation = t;
+            return print(transformation.applyOn(parse()));
+        }
+
+        private Expression parse(){
+            return parser.parse();
+        }
+
+        private String print(Expression e){
+            return printer.print(e);
+        }
 }
