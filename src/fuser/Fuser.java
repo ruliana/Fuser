@@ -8,12 +8,12 @@ import java.util.List;
 import tekai.Expression;
 import tekai.Parser;
 import tekai.Printer;
-import tekai.Transformation;
+import tekai.standard.MultiTransformation;
 
 public class Fuser {
 
 	private Parser parser;
-        private Transformation transformation;
+        private TransformationConfig tconf;
         private static Printer printer;
 
 	public Fuser(String sqlString) {
@@ -21,6 +21,7 @@ public class Fuser {
                 ParserConfig.configureParser(parser);
 
                 //Config Transformation
+                tconf = new TransformationConfig();
 	}
 
         /**
@@ -34,19 +35,18 @@ public class Fuser {
         public List<String> fusion(){
 
             List<String> result = new LinkedList<String>();
-            result.add(transformTo(TransformationConfig.tPOSTGRES));
-            result.add(transformTo(TransformationConfig.tMSSQL));
-            result.add(transformTo(TransformationConfig.tORACLE));
-            result.add(transformTo(TransformationConfig.tMYSQL));
-            result.add(transformTo(TransformationConfig.tFIREBIRD));
+            result.add(transformTo(tconf.gettPOSTGRES()));
+            result.add(transformTo(tconf.gettMSSQL()));
+            result.add(transformTo(tconf.gettORACLE()));
+            result.add(transformTo(tconf.gettMYSQL()));
+            result.add(transformTo(tconf.gettFIREBIRD()));
 
             return result;
 
         }
 
-        private String transformTo(Transformation t){
-            transformation = t;
-            return print(transformation.applyOn(parse()));
+        private String transformTo(MultiTransformation t){
+            return print(t.applyOn(parse()));
         }
 
         private Expression parse(){

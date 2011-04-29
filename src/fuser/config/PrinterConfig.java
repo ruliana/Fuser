@@ -1,7 +1,10 @@
 package fuser.config;
 
+import java.util.Iterator;
+import java.util.List;
 import tekai.Expression;
 import tekai.Printer;
+import static tekai.Helpers.word;
 
 /**
  *
@@ -19,7 +22,9 @@ public class PrinterConfig extends Printer{
             } else {
                 return e.printValue() + printChildren(e.getChildren());
             }
-        } else if (e.isType("FROM") || e.isType("GROUP") || e.isType("ORDER")) {
+        } else if(e.isType("FROM")){
+            return e.printValue() + printFrom(e.getChildren());
+        } else if (e.isType("GROUP") || e.isType("ORDER")) {
             return e.printValue() + printChildren(e.getChildren());
         } else if (e.isType("LIMIT")
                         || e.isType("OFFSET")
@@ -28,7 +33,9 @@ public class PrinterConfig extends Printer{
                         || e.isType("WHERE")
                         || e.isType("THEN")
                         || e.isType("ELSE")
-                        || e.isType("NOT")) {
+                        || e.isType("NOT")
+                        || e.isType("JOIN")
+                        || e.isType("ON")) {
             return e.printValue() + printChildren(e.getChildren(), "");
         } else if (e.isType("CONCAT")) {
             return printChildren(e.getChildren(), e.printValue());
@@ -36,8 +43,9 @@ public class PrinterConfig extends Printer{
             return e.printValue() + printChildren(e.getChildren()) + ")";
         } else if (e.isType("FUNCTION")) {
             StringBuilder result = new StringBuilder();
+            String separator = (e.hasValue(word("POSITION")) ? " IN" : ",");
             result.append(e.printValue()).append("(");
-            result.append(printChildren(e.getChildren()));
+            result.append(printChildren(e.getChildren(), separator));
             return result.append(")").toString();
         } else if (e.isType("ARITHMETIC")
                         || e.isType("BOOLEAN")
@@ -50,6 +58,22 @@ public class PrinterConfig extends Printer{
         } else {
             return e.printValue();
         }
+    }
+
+    protected String printFrom(List<Expression> e) {
+        StringBuilder result = new StringBuilder();
+
+        Iterator<Expression> iterator = e.iterator();
+        if (iterator.hasNext())
+            result.append(print(iterator.next()));
+
+        while (iterator.hasNext()) {
+            Expression exp = iterator.next();
+            result.append(exp.isType("JOIN") ? "" : ",");
+            result.append(print(exp));
+        }
+
+        return result.toString();
     }
 
 

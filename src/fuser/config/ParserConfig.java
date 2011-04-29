@@ -77,7 +77,9 @@ public class ParserConfig {
                     Expression join = new Expression("JOIN", lastMatch());
                     join.addChildren(nextExpression());
                     consumeIf("ON");
-                    join.addChildren(nextExpression());
+                    Expression on = new Expression("ON", lastMatch());
+                    on.addChildren(nextExpression());
+                    join.addChildren(on);
                     from.addChildren(join);
                 }
                 result.addChildren(fields, from);
@@ -184,14 +186,12 @@ public class ParserConfig {
 
         //GROUP BY
         parser.register(new BeforeMiddleAfterParselet(GROUP, word("GROUP BY"), "\\,", null, "GROUPBY"));
-        //parser.register(new BeforeMiddleAfterParselet(ORDER, "\\b((?i)HAVING)\\b", "\\,", null, "HAVING"));
-
+       
         // GROUPING (parenthesis)
-        //parser.register(new GroupingParselet(GROUPING, "\\(", "\\)"));
         parser.register(new BeforeMiddleAfterParselet(GROUPING, "\\(", null, "\\)", "PARENTHESIS"));
 
         // FUNCTION
-        parser.register(new BeforeMiddleAfterParselet(FUNCTION, "(\\w+)\\s*\\(", ",", "\\)", "FUNCTION"));
+        parser.register(new BeforeMiddleAfterParselet(FUNCTION, "(\\w+)\\s*\\(", "\\,|"+word("IN"), "\\)", "FUNCTION"));
 
         //POSTFIX ASC DESC
         parser.register(new PostfixParselet(POS, word("ASC|DESC"), "ORDERING"));
