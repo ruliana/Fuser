@@ -1,5 +1,6 @@
 package fuser.config;
 
+import static tekai.Helpers.word;
 import tekai.Expression;
 import tekai.Parselet;
 import tekai.Parser;
@@ -8,7 +9,6 @@ import tekai.standard.BeforeMiddleAfterParselet;
 import tekai.standard.InfixParselet;
 import tekai.standard.PostfixParselet;
 import tekai.standard.PrefixParselet;
-import static tekai.Helpers.word;
 
 /**
  *
@@ -50,7 +50,7 @@ public class ParserConfig {
             public Expression parse() {
                 Expression result = new Expression("SQL", "SQL");
 
-                Expression fields = new Expression("SELECT", "SELECT");
+                Expression fields = new Expression("SELECT", lastMatch());
 
                 if(canConsume(word("DISTINCT"))){
                     fields.addChildren(new Expression("DISTINCT", lastMatch()));
@@ -186,12 +186,13 @@ public class ParserConfig {
 
         //GROUP BY
         parser.register(new BeforeMiddleAfterParselet(GROUP, word("GROUP BY"), "\\,", null, "GROUPBY"));
-       
+
         // GROUPING (parenthesis)
         parser.register(new BeforeMiddleAfterParselet(GROUPING, "\\(", null, "\\)", "PARENTHESIS"));
 
         // FUNCTION
-        parser.register(new BeforeMiddleAfterParselet(FUNCTION, "(\\w+)\\s*\\(", "\\,|"+word("IN"), "\\)", "FUNCTION"));
+        parser.register(new BeforeMiddleAfterParselet(FUNCTION, "("+ word("POSITION") + ")\\s*\\(", word("IN"), "\\)", "FUNCTION-POSITION"));
+        parser.register(new BeforeMiddleAfterParselet(FUNCTION, "(\\w+)\\s*\\(", "\\,", "\\)", "FUNCTION"));
 
         //POSTFIX ASC DESC
         parser.register(new PostfixParselet(POS, word("ASC|DESC"), "ORDERING"));

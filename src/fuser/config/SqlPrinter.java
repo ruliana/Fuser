@@ -2,15 +2,15 @@ package fuser.config;
 
 import java.util.Iterator;
 import java.util.List;
+
 import tekai.Expression;
 import tekai.Printer;
-import static tekai.Helpers.word;
 
 /**
  *
  * @author SFPISA
  */
-public class PrinterConfig extends Printer{
+public class SqlPrinter extends Printer {
 
     @Override
     public String print(Expression e) {
@@ -41,12 +41,10 @@ public class PrinterConfig extends Printer{
             return printChildren(e.getChildren(), e.printValue());
         } else if (e.isType("PARENTHESIS")) {
             return e.printValue() + printChildren(e.getChildren()) + ")";
+        } else if (e.isType("FUNCTION-POSITION")) {
+            return e.printValue() + "("+ printChildren(e.getChildren(), "IN") + ")";
         } else if (e.isType("FUNCTION")) {
-            StringBuilder result = new StringBuilder();
-            String separator = (e.hasValue(word("POSITION")) ? " IN" : ",");
-            result.append(e.printValue()).append("(");
-            result.append(printChildren(e.getChildren(), separator));
-            return result.append(")").toString();
+            return e.printValue() + "("+ printChildren(e.getChildren(), ",") + ")";
         } else if (e.isType("ARITHMETIC")
                         || e.isType("BOOLEAN")
                         || e.isType("LIKE")
@@ -75,6 +73,4 @@ public class PrinterConfig extends Printer{
 
         return result.toString();
     }
-
-
 }

@@ -1,7 +1,8 @@
 package fuser.config;
 
-import tekai.standard.MultiTransformation;
 import static tekai.standard.CommonTransformation.from;
+import tekai.Transformation;
+import tekai.standard.MultiTransformation;
 
 /**
  *
@@ -11,13 +12,22 @@ public class TransformationConfig {
 
     /*
      *
-     * This class, separate rules of TransformationRules in groups
+     * This class separates rules of TransformationRules in groups
      */
     private MultiTransformation tORACLE;
     private MultiTransformation tMSSQL;
     private MultiTransformation tMYSQL;
     private MultiTransformation tFIREBIRD;
     private MultiTransformation tPOSTGRES;
+
+    private static Transformation t1 = from("SUBSTR", "FUNCTION").toValue("SUBSTRING");
+    private static Transformation t3 = from("POSITION", "FUNCTION-POSITION").toValue("CHARINDEX").toType("FUNCTION");
+    private static Transformation t4 = from("POSITION", "FUNCTION-POSITION").toValue("INSTR").toType("FUNCTION").toParamOrder(2, 1);
+    private static Transformation t5 = from("\\|\\|", "CONCAT").toValue("+");
+    private static Transformation t6 = from("\\|\\|", "CONCAT").toValue("CONCAT").toType("FUNCTION");
+    private static Transformation t7 = from("CHAR_LENGTH", "FUNCTION").toValue("LEN");
+    private static Transformation t8 = from("CHAR_LENGTH", "FUNCTION").toValue("LENGTH");
+    private static Transformation t9 = from("END", "END").toValue("END CASE");
 
     public TransformationConfig(){
         tORACLE = new MultiTransformation();
@@ -26,14 +36,17 @@ public class TransformationConfig {
         tFIREBIRD = new MultiTransformation();
         tPOSTGRES = new MultiTransformation();
 
-        tORACLE.register(TransformationRules.t2)
-                .register(TransformationRules.t7);
-        tMSSQL.register(TransformationRules.t1)
-                .register(TransformationRules.t2)
-                .register(TransformationRules.t4)
-                .register(TransformationRules.t6);
-        tMYSQL.register(TransformationRules.t5)
-                .register(TransformationRules.t8);
+        tORACLE.register(t4)
+               .register(t8);
+
+        tMSSQL.register(t1)
+              .register(t3)
+              .register(t5)
+              .register(t7);
+
+        tMYSQL.register(t4)
+              .register(t6)
+              .register(t9);
     }
 
     public MultiTransformation gettFIREBIRD() {
@@ -55,5 +68,5 @@ public class TransformationConfig {
     public MultiTransformation gettPOSTGRES() {
         return tPOSTGRES;
     }
-    
+
 }
