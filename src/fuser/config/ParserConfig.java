@@ -25,6 +25,7 @@ public class ParserConfig {
         final int NOT = x++;
         final int LIKE = x++;
         final int POS = x++;
+        final int LOGICOPER = x++;
         final int OPERATOR = x++;
         final int MULTIPLY = x++;
         final int SUM = x++;
@@ -58,11 +59,6 @@ public class ParserConfig {
 
                 do {
                     Expression field = nextExpression();
-                    if (field.isType("OPERATOR")) {
-                        Expression substitute = new Expression("ALIAS", field.printValue());
-                        substitute.addChildren(field.getChildren());
-                        field = substitute;
-                    }
                     fields.addChildren(field);
                 } while (canConsume(","));
 
@@ -73,10 +69,10 @@ public class ParserConfig {
                     from.addChildren(nextExpression());
                 } while(canConsume(","));
 
-                while (canConsume(word("INNER(?: OUTER|RIGHT|LEFT)? JOIN"))) {
+                while (canConsume(word("(?:INNER|RIGHT|LEFT)?\\s+JOIN|JOIN"))) {
                     Expression join = new Expression("JOIN", lastMatch());
                     join.addChildren(nextExpression());
-                    consumeIf("ON");
+                    consumeIf(word("ON"));
                     Expression on = new Expression("ON", lastMatch());
                     on.addChildren(nextExpression());
                     join.addChildren(on);
@@ -179,12 +175,12 @@ public class ParserConfig {
         parser.register(new InfixParselet(ATOM, word("AS"), "ALIAS"));
 
         //OPERATORS
-        parser.register(new InfixParselet(OPERATOR, "=", "OPERATOR"));
+        parser.register(new InfixParselet(LOGICOPER, "\\>\\=", "OPERATOR"));
+        parser.register(new InfixParselet(LOGICOPER, "\\<\\=", "OPERATOR"));
+        parser.register(new InfixParselet(LOGICOPER, "\\<\\>", "OPERATOR"));
+        parser.register(new InfixParselet(OPERATOR, "\\=", "OPERATOR"));
         parser.register(new InfixParselet(OPERATOR, "\\>", "OPERATOR"));
-        parser.register(new InfixParselet(OPERATOR, word(">="), "OPERATOR"));
         parser.register(new InfixParselet(OPERATOR, "\\<", "OPERATOR"));
-        parser.register(new InfixParselet(OPERATOR, word("<="), "OPERATOR"));
-        parser.register(new InfixParselet(OPERATOR, word("<>"), "OPERATOR"));
 
         //CONCAT
         parser.register(new BeforeMiddleAfterParselet(ATOM, null, "\\|\\|", null, "CONCAT"));
