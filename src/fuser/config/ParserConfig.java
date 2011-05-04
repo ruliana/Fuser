@@ -25,7 +25,7 @@ public class ParserConfig {
         final int NOT = x++;
         final int LIKE = x++;
         final int POS = x++;
-        final int EQUALS = x++;
+        final int OPERATOR = x++;
         final int MULTIPLY = x++;
         final int SUM = x++;
         final int GROUPING = x++;
@@ -178,8 +178,13 @@ public class ParserConfig {
         //ALIAS
         parser.register(new InfixParselet(ATOM, word("AS"), "ALIAS"));
 
-        //EQUALS (OPERATOR)
-        parser.register(new InfixParselet(EQUALS, "=", "OPERATOR"));
+        //OPERATORS
+        parser.register(new InfixParselet(OPERATOR, "=", "OPERATOR"));
+        parser.register(new InfixParselet(OPERATOR, "\\>", "OPERATOR"));
+        parser.register(new InfixParselet(OPERATOR, word(">="), "OPERATOR"));
+        parser.register(new InfixParselet(OPERATOR, "\\<", "OPERATOR"));
+        parser.register(new InfixParselet(OPERATOR, word("<="), "OPERATOR"));
+        parser.register(new InfixParselet(OPERATOR, word("<>"), "OPERATOR"));
 
         //CONCAT
         parser.register(new BeforeMiddleAfterParselet(ATOM, null, "\\|\\|", null, "CONCAT"));
@@ -204,6 +209,9 @@ public class ParserConfig {
 
         //IDENTIFIER
         parser.register(new AtomParselet(ATOM, "(\\w+\\.\\w+|\\w+|\\*)", "IDENTIFIER"));
+
+        //PARAMETER
+        parser.register(new AtomParselet(ATOM, "(\\:\\w+)", "PARAMETER"));
     }
 
 }
