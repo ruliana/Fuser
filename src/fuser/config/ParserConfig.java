@@ -23,6 +23,7 @@ public class ParserConfig {
         final int OR = x++;
         final int AND = x++;
         final int NOT = x++;
+        final int IS = x++;
         final int LIKE = x++;
         final int POS = x++;
         final int LOGICOPER = x++;
@@ -165,7 +166,7 @@ public class ParserConfig {
         parser.register(new PrefixParselet(NOT, word("NOT"), "NOT"));
 
         //LIKE
-        parser.register(new InfixParselet(LIKE, word("LIKE"), "LIKE"));
+        parser.register(new InfixParselet(LIKE, word("NOT\\s+LIKE|LIKE"), "LIKE"));
 
         // ARITHMETIC
         parser.register(new InfixParselet(MULTIPLY, "(\\*|/|%)", "ARITHMETIC"));
@@ -181,6 +182,9 @@ public class ParserConfig {
         parser.register(new InfixParselet(OPERATOR, "\\=", "OPERATOR"));
         parser.register(new InfixParselet(OPERATOR, "\\>", "OPERATOR"));
         parser.register(new InfixParselet(OPERATOR, "\\<", "OPERATOR"));
+
+         //IS
+        parser.register(new InfixParselet(IS, word("IS"), "IS"));
 
         //CONCAT
         parser.register(new BeforeMiddleAfterParselet(ATOM, null, "\\|\\|", null, "CONCAT"));
