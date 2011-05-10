@@ -9,7 +9,9 @@ import tekai.Printer;
 import tekai.standard.MultiTransformation;
 import fuser.config.ParserConfig;
 import fuser.config.SqlPrinter;
+import fuser.config.SqlValidate;
 import fuser.config.TransformationConfig;
+import tekai.UnparseableException;
 
 public class Fuser {
 
@@ -17,14 +19,18 @@ public class Fuser {
     private TransformationConfig tconf;
     private Printer printer;
     private Expression parsed;
+    private ValidateInstruction valid;
+    private String sql;
 
     public Fuser(String sqlString) {
-        this.parser = new Parser(sqlString);
-        ParserConfig.configureParser(parser);
+        sql = sqlString;
+        configParser();
 
         // Config Transformation
         tconf = new TransformationConfig();
         printer = new SqlPrinter();
+
+        valid = new SqlValidate();
     }
 
     /**
@@ -49,16 +55,33 @@ public class Fuser {
     }
 
     private String transformTo(MultiTransformation t) {
+        if(!validate(parse())) return "";
         return print(t.applyOn(parse()));
     }
 
     private Expression parse() {
-        if (parsed == null) parsed = parser.parse();
+        try {
+            if (parsed == null) parsed = parser.parse();
+        } catch (Exception e) {
+            configParser();
+            parsed = null;
+            throw new UnparseableException(e.getMessage());
+        }
+
         return parsed;
     }
 
     private String print(Expression e) {
         return printer.print(e);
+    }
+
+    private boolean validate(Expression e){
+        return valid.validate(e);
+    }
+
+    private void configParser(){
+        parser = new Parser(sql);
+        ParserConfig.configureParser(parser);
     }
 
     public String toORACLE() {

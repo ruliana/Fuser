@@ -95,6 +95,14 @@ public class ParserConfig {
                     result.addChildren(group);
                 }
 
+                if(canConsume(word("UNION\\s+ALL|UNION"))){
+                    Expression union = new Expression("UNION", lastMatch());
+                    union.addChildren(result);
+                    union.addChildren(nextExpression());
+                    result = new Expression("SQL", "SQL");
+                    result.addChildren(union);
+                }
+
                 if(canConsume(word("ORDER BY"))){
                     Expression order = new Expression("ORDER", lastMatch());
                     do {
@@ -190,7 +198,7 @@ public class ParserConfig {
         parser.register(new BeforeMiddleAfterParselet(ATOM, null, "\\|\\|", null, "CONCAT"));
 
         //GROUP BY
-        parser.register(new BeforeMiddleAfterParselet(GROUP, word("GROUP BY"), "\\,", null, "GROUPBY"));
+        //parser.register(new BeforeMiddleAfterParselet(GROUP, word("GROUP BY"), "\\,", null, "GROUPBY"));
 
         // GROUPING (parenthesis)
         parser.register(new BeforeMiddleAfterParselet(GROUPING, "\\(", null, "\\)", "PARENTHESIS"));

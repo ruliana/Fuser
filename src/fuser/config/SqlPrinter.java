@@ -52,7 +52,8 @@ public class SqlPrinter extends Printer {
                         || e.isType("LIKE")
                         || e.isType("ALIAS")
                         || e.isType("OPERATOR")
-                        || e.isType("IS")) {
+                        || e.isType("IS")
+                        || e.isType("UNION")) {
             return print(e.getChild(0)) + e.printValue() + print(e.getChild(1));
         } else if (e.isType("ORDERING")) {
             return print(e.getChild(0)) + e.printValue();
