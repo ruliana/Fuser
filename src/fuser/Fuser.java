@@ -84,6 +84,15 @@ public class Fuser {
         ParserConfig.configureParser(parser);
     }
 
+    /**
+     * Change the parameters (:param) of a SQL String to NULL.
+     * To run on database.
+     * @return String
+     */
+    public String changeParam(){
+        return transformTo(tconf.gettParam());
+    }
+
     public String toORACLE() {
         return transformTo(tconf.gettORACLE());
     }

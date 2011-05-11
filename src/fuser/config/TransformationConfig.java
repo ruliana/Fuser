@@ -24,6 +24,8 @@ public class TransformationConfig {
     private MultiTransformation tFIREBIRD;
     private MultiTransformation tPOSTGRES;
 
+    private MultiTransformation tParam;
+
     private static Transformation t1 = from(word("SUBSTR"), "FUNCTION").toValue("SUBSTRING");
     private static Transformation t3 = from(word("POSITION"), "FUNCTION-POSITION").toValue("CHARINDEX").toType("FUNCTION");
     private static Transformation t4 = from(word("POSITION"), "FUNCTION-POSITION").toValue("INSTR").toType("FUNCTION").toParamOrder(2, 1);
@@ -41,6 +43,7 @@ public class TransformationConfig {
             return e(" LTRIM", "FUNCTION",e("RTRIM", "FUNCTION", children));
         }};
     private static Transformation t11 = from(word("SUBSTR"), "FUNCTION").toValue("SUBSTRING").toType("SUBSTRING-FIREBIRD");
+    private static Transformation t12 = from(null, "PARAMETER").toValue("NULL");
 
     public TransformationConfig(){
         tORACLE = new MultiTransformation();
@@ -48,6 +51,7 @@ public class TransformationConfig {
         tMYSQL = new MultiTransformation();
         tFIREBIRD = new MultiTransformation();
         tPOSTGRES = new MultiTransformation();
+        tParam = new MultiTransformation();
 
         tORACLE.register(t4)
                .register(t8);
@@ -62,6 +66,8 @@ public class TransformationConfig {
               //.register(t9);
 
         tFIREBIRD.register(t11);
+
+        tParam.register(t12);
     }
 
     public MultiTransformation gettFIREBIRD() {
@@ -83,5 +89,10 @@ public class TransformationConfig {
     public MultiTransformation gettPOSTGRES() {
         return tPOSTGRES;
     }
+
+    public MultiTransformation gettParam() {
+        return tParam;
+    }
+
 
 }

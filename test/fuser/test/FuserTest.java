@@ -68,4 +68,11 @@ public class FuserTest {
         assertEquals("MYSQL", "SELECT TRIM( CONCAT( campo, LOWER(campo2))) FROM Tabela", fuser.toMYSQL() );
     }
 
+    @Test
+    public void testParam(){
+        Fuser fuser = new Fuser("SELECT * from tabela where id = :id AND nome =:nome");
+
+        assertEquals("Param", "SELECT * from tabela where id = NULL AND nome =NULL", fuser.changeParam() );
+    }
+
 }
