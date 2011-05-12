@@ -32,6 +32,7 @@ public class ParserConfig {
         final int SUM = x++;
         final int GROUPING = x++;
         final int GROUP = x++;
+        final int IN = x++;
         final int FUNCTION = x++;
         final int CASE = x++;
         final int SELECT = x++;
@@ -165,6 +166,38 @@ public class ParserConfig {
                 ecase.addChildren(new Expression("END", lastMatch()));
 
                 return ecase;
+            }
+        });
+
+        //IN
+        parser.register(new Parselet(IN) {
+
+            @Override
+            public boolean isLeftAssociativity() {
+              return true;
+            }
+
+            @Override
+            public boolean isPrefixParselet() {
+                return false;
+            }
+
+            @Override
+            public String startingRegularExpression() {
+                return word("NOT\\s+IN|IN")+"\\s*\\(";
+            }
+
+            @Override
+            protected Expression parse() {
+                Expression in = new Expression("IN", lastMatch());
+                in.addChildren(left());
+                Expression sub = new Expression("IN-EXP", "IN-EXP");
+                do{
+                    sub.addChildren(nextExpression());
+                }while(canConsume("\\,"));
+                consumeIf("\\)");
+                in.addChildren(sub);
+                return in;
             }
         });
 

@@ -171,6 +171,15 @@ public class PrinterTest {
         assertEquals(sql, print(p.parse(sql)));
     }
 
+    @Test
+    public void testIn(){
+        sql = "campo in(SELECT * FROM tb)";
+        assertEquals(sql, print(p.parse(sql)));
+
+        sql = "Select * FROM tb where campo NOT IN(1,2, 3,6)";
+        assertEquals(sql, print(p.parse(sql)));
+    }
+
     private String print(Expression e) {
         Printer p = new SqlPrinter();
         return p.print(e);

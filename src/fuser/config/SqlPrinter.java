@@ -45,8 +45,12 @@ public class SqlPrinter extends Printer {
             return e.printValue() + "("+ printChildren(e.getChildren(), "IN") + ")";
         } else if(e.isType("SUBSTRING-FIREBIRD")){
             return e.printValue() +"("+ print(e.getChild(0)) +" FROM "+ print(e.getChild(1)) +" FOR "+ print(e.getChild(2)) +")";
-        }else if (e.isType("FUNCTION")) {
+        } else if (e.isType("FUNCTION")) {
             return e.printValue() + "("+ printChildren(e.getChildren(), ",") + ")";
+        } else if(e.isType("IN")){
+            return print(e.getChild(0)) + e.printValue() + "(" + print(e.getChild(1)) + ")";
+        } else if(e.isType("IN-EXP")){
+            return printChildren(e.getChildren(), ",");
         } else if (e.isType("ARITHMETIC")
                         || e.isType("BOOLEAN")
                         || e.isType("LIKE")

@@ -203,6 +203,15 @@ public class ParserTest {
                  "SELECT c1 FROM Tb1 UNION ALL SELECT c2 FROM Tb2 ORDER BY 1");
      }
 
+     @Test
+     public void testIn(){
+         assertParsing("([in]:IN [campo]:IDENTIFIER ([IN-EXP]:IN-EXP [1]:NUMBER [2]:NUMBER))", "campo in (1,2)");
+         assertParsing("([SQL]:SQL ([Select]:SELECT [*]:IDENTIFIER) ([from]:FROM [tabela]:IDENTIFIER) ([where]:WHERE ([and]:BOOLEAN ([=]:OPERATOR [campo]:IDENTIFIER [2]:NUMBER) ([in]:IN [campo2]:IDENTIFIER ([IN-EXP]:IN-EXP [1]:NUMBER)))))",
+                 "Select * from tabela where campo = 2 and campo2 in (1)");
+         assertParsing("([NOT  IN]:IN [campo]:IDENTIFIER ([IN-EXP]:IN-EXP ([SQL]:SQL ([SELECT]:SELECT [*]:IDENTIFIER) ([FROM]:FROM [TB]:IDENTIFIER))))",
+                 "campo NOT  IN(SELECT * FROM TB)");
+     }
+
     @Test
     public void exceptions() {
         // TODO Launch specific exception to specific problems
