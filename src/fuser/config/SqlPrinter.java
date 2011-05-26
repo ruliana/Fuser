@@ -17,7 +17,11 @@ public class SqlPrinter extends Printer {
         if (e.isType("SQL")) {
             return printChildren(e.getChildren(), "");
         } else if (e.isType("SELECT")) {
-            if (e.getChild(0).isType("DISTINCT")) {
+            if (e.getChild(0).isType("DISTINCT")
+                    && e.getChild(1).isType("TOP")) {
+                return e.printValue() + print(e.getChildren().remove(0)) + print(e.getChildren().remove(0)) + printChildren(e.getChildren());
+            } else if(e.getChild(0).isType("DISTINCT")
+                    || e.getChild(0).isType("TOP")) {
                 return e.printValue() + print(e.getChildren().remove(0)) + printChildren(e.getChildren());
             } else {
                 return e.printValue() + printChildren(e.getChildren());
@@ -35,7 +39,8 @@ public class SqlPrinter extends Printer {
                         || e.isType("ELSE")
                         || e.isType("NOT")
                         || e.isType("JOIN")
-                        || e.isType("ON")) {
+                        || e.isType("ON")
+                        || e.isType("TOP")) {
             return e.printValue() + printChildren(e.getChildren(), "");
         } else if (e.isType("CONCAT")) {
             return printChildren(e.getChildren(), e.printValue());

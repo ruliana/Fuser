@@ -63,7 +63,6 @@ public class TransformationConfig {
               .register(t10);
 
         tMYSQL.register(t6);
-              //.register(t9);
 
         tFIREBIRD.register(t11);
 

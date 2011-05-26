@@ -6,6 +6,8 @@ public class SqlValidate extends ValidateInstruction {
 
     public SqlValidate(){
         super();
+
+        //Allows only the expressions
         validExpression("FUNCTION", "ABS", 1);
         validExpression("FUNCTION", "AVG", 1);
         validExpression("FUNCTION", "CHAR_LENGTH", 1);
@@ -25,6 +27,7 @@ public class SqlValidate extends ValidateInstruction {
         validExpression("FUNCTION", "SUM", 1);
         validExpression("FUNCTION", "TRIM", 1);
         validExpression("FUNCTION", "UPPER", 1);
+        validExpression("OFFSET", "", null);
 
     }
 }
