@@ -242,6 +242,7 @@ public class ParserConfig {
 
         //POSTFIX ASC DESC
         parser.register(new PostfixParselet(POS, word("ASC|DESC"), "ORDERING"));
+
         //NUMBER
         parser.register(new AtomParselet(ATOM, "\\d+(?:\\.\\d+)?", "NUMBER"));
 

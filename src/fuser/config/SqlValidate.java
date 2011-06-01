@@ -27,6 +27,10 @@ public class SqlValidate extends ValidateInstruction {
         validExpression("FUNCTION", "SUM", 1);
         validExpression("FUNCTION", "TRIM", 1);
         validExpression("FUNCTION", "UPPER", 1);
+        validExpression("FUNCTION", "CAST", null);
+        validExpression("FUNCTION", "VARCHAR", 1);
+        validExpression("FUNCTION", "CHAR", 1);
+        validExpression("FUNCTION", "DECIMAL", 2);
         validExpression("OFFSET", "", null);
 
     }

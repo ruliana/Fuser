@@ -4,10 +4,7 @@ import fuser.config.ParserConfig;
 import fuser.config.SqlPrinter;
 import static org.junit.Assert.assertEquals;
 import static tekai.Expression.e;
-
-
 import org.junit.Test;
-
 import tekai.Expression;
 import tekai.Parser;
 import tekai.Printer;

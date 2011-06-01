@@ -17,8 +17,8 @@ public class SqlPrinter extends Printer {
         if (e.isType("SQL")) {
             return printChildren(e.getChildren(), "");
         } else if (e.isType("SELECT")) {
-            if (e.getChild(0).isType("DISTINCT")
-                    && e.getChild(1).isType("TOP")) {
+            if (e.getChild(0).isType("DISTINCT") && e.getChild(1).isType("TOP")
+                    || e.getChild(0).isType("TOP") && e.getChild(1).isType("DISTINCT")) {
                 return e.printValue() + print(e.getChildren().remove(0)) + print(e.getChildren().remove(0)) + printChildren(e.getChildren());
             } else if(e.getChild(0).isType("DISTINCT")
                     || e.getChild(0).isType("TOP")) {

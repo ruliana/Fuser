@@ -90,18 +90,32 @@ public class FuserTest {
         Fuser fuser = new Fuser("SELECT DISTINCT b FROM Tb WHERE campo = 3 OR id >= 0 ORDER BY 2 limit 20");
         assertEquals("MSSQL", "SELECT DISTINCT TOP 20 b FROM Tb WHERE campo = 3 OR id >= 0 ORDER BY 2", fuser.toSQLServer());
         assertEquals("ORACLE", "SELECT DISTINCT b FROM Tb WHERE campo = 3 OR id >= 0 AND ROWNUM <= 20 ORDER BY 2", fuser.toOracle());
-        assertEquals("FIREBIRD", "SELECT DISTINCT FIRST 20 b FROM Tb WHERE campo = 3 OR id >= 0 ORDER BY 2", fuser.toFirebird());
+        assertEquals("FIREBIRD", "SELECT FIRST 20 DISTINCT b FROM Tb WHERE campo = 3 OR id >= 0 ORDER BY 2", fuser.toFirebird());
         assertEquals("MYSQL", "SELECT DISTINCT b FROM Tb WHERE campo = 3 OR id >= 0 ORDER BY 2 limit 20", fuser.toMySQL());
         assertEquals("POSTGRES", "SELECT DISTINCT b FROM Tb WHERE campo = 3 OR id >= 0 ORDER BY 2 limit 20", fuser.toPostgreSQL());
     }
 
-     @Test
+    @Test
     public void testLimitUnion(){
         Fuser fuser = new Fuser("SELECT id1 AS id FROM Tb WHERE campo = 3 UNION SELECT campo2 as id FROM tb2 ORDER BY id LIMIT 50");
         assertEquals("MSSQL", "SELECT TOP 50 * FROM(SELECT id1 AS id FROM Tb WHERE campo = 3 UNION SELECT campo2 as id FROM tb2 ORDER BY id) AS SUBQUERY", fuser.toSQLServer());
         assertEquals("ORACLE", "SELECT * FROM(SELECT id1 AS id FROM Tb WHERE campo = 3 UNION SELECT campo2 as id FROM tb2 ORDER BY id) WHERE ROWNUM <= 50", fuser.toOracle());
-        assertEquals("FIREBIRD", "SELECT FIRST 50 * FROM(SELECT id1 AS id FROM Tb WHERE campo = 3 UNION SELECT campo2 as id FROM tb2 ORDER BY id) AS SUBQUERY", fuser.toFirebird());
+        assertEquals("FIREBIRD", "SELECT FIRST 50 * FROM(SELECT id1 AS id FROM Tb WHERE campo = 3 UNION SELECT campo2 as id FROM tb2 ORDER BY id)", fuser.toFirebird());
         assertEquals("MYSQL", "SELECT id1 AS id FROM Tb WHERE campo = 3 UNION SELECT campo2 as id FROM tb2 ORDER BY id LIMIT 50", fuser.toMySQL());
         assertEquals("POSTGRES", "SELECT id1 AS id FROM Tb WHERE campo = 3 UNION SELECT campo2 as id FROM tb2 ORDER BY id LIMIT 50", fuser.toPostgreSQL());
+    }
+
+    @Test
+    public void testCast(){
+        Fuser fuser = new Fuser("SELECT CAST(campo AS INTEGER) FROM TAB1");
+        assertEquals("POSTGRES", "SELECT CAST(campo AS INTEGER) FROM TAB1", fuser.toPostgreSQL());
+        assertEquals("FIREBIRD", "SELECT CAST(campo AS INTEGER) FROM TAB1", fuser.toFirebird());
+        assertEquals("MYSQL", "SELECT CAST(campo AS INT) FROM TAB1", fuser.toMySQL());
+        assertEquals("ORACLE", "SELECT CAST(campo AS NUMBER(10)) FROM TAB1", fuser.toOracle());
+        assertEquals("SQLSERVER", "SELECT CAST(campo AS INT) FROM TAB1", fuser.toSQLServer());
+
+        fuser = new Fuser("SELECT CAST(campo AS VARCHAR(10)) FROM TAB1");
+        assertEquals("ORACLE", "SELECT CAST(campo AS VARCHAR2(10)) FROM TAB1", fuser.toOracle());
+
     }
 }
